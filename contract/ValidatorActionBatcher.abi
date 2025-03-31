@@ -1,0 +1,98 @@
+[
+  {
+    "stateMutability": "payable",
+    "type": "fallback"
+  },
+  {
+    "inputs": [],
+    "name": "CONSOLIDATION_SYSTEM_CONTRACT",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "WITHDRAWAL_SYSTEM_CONTRACT",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes[]",
+        "name": "data",
+        "type": "bytes[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "feeLimit",
+        "type": "uint256"
+      }
+    ],
+    "name": "batchConsolidate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes[]",
+        "name": "data",
+        "type": "bytes[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "feeLimit",
+        "type": "uint256"
+      }
+    ],
+    "name": "batchWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getConsolidationFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getWithdrawalFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
+]

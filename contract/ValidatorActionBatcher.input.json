@@ -1,0 +1,35 @@
+{
+    "language": "Solidity",
+    "sources": {
+        "contracts/ValidatorActionBatcher.sol": {
+            "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.26;\n \ncontract ValidatorActionBatcher {\n    address public constant WITHDRAWAL_SYSTEM_CONTRACT = 0x00000961Ef480Eb55e80D19ad83579A64c007002;\n    address public constant CONSOLIDATION_SYSTEM_CONTRACT = 0x0000BBdDc7CE488642fb579F8B00f3a590007251;\n \n    modifier onlySelf {\n        _checkSelf();\n        _;\n    }\n \n    function _checkSelf() internal view virtual {\n        if(msg.sender != address(this)) {\n            revert(\"self call only\");\n        }\n    }\n \n    receive() external payable {\n    }\n \n    fallback() external payable {\n    }\n \n    function getWithdrawalFee() public view returns (uint256 fee) {\n        (bool ok, bytes memory result) = WITHDRAWAL_SYSTEM_CONTRACT.staticcall(\"\");\n        require(ok);\n \n        fee = abi.decode(result, (uint256));\n    }\n \n    function batchWithdraw(bytes[] calldata data, uint256 feeLimit) public onlySelf {\n        uint256 fee = getWithdrawalFee();\n \n        require(feeLimit == 0 || (fee <= feeLimit), \"fee too high\");\n        require(address(this).balance >= fee * data.length, \"balance too low\");\n \n        for (uint256 i; i < data.length; i++) {\n            require(data[i].length == 56, \"invalid withdrawal\");\n \n            (bool success, ) = WITHDRAWAL_SYSTEM_CONTRACT.call{value: fee}(data[i]);\n            require(success, \"call failed\");\n        }\n    }\n \n    function getConsolidationFee() public view returns (uint256 fee) {\n        (bool ok, bytes memory result) = CONSOLIDATION_SYSTEM_CONTRACT.staticcall(\"\");\n        require(ok);\n \n        fee = abi.decode(result, (uint256));\n    }\n \n    function batchConsolidate(bytes[] calldata data, uint256 feeLimit) public onlySelf {\n        uint256 fee = getConsolidationFee();\n \n        require(feeLimit == 0 || (fee <= feeLimit), \"fee too high\");\n        require(address(this).balance >= fee * data.length, \"balance too low\");\n \n        for (uint256 i; i < data.length; i++) {\n            require(data[i].length == 96, \"invalid consolidation\");\n \n            (bool success, ) = CONSOLIDATION_SYSTEM_CONTRACT.call{value: fee}(data[i]);\n            require(success, \"call failed\");\n        }\n    }\n \n}"
+        }
+    },
+    "settings": {
+        "optimizer": {
+            "enabled": true,
+            "runs": 200
+        },
+        "outputSelection": {
+            "*": {
+                "": [
+                    "ast"
+                ],
+                "*": [
+                    "abi",
+                    "metadata",
+                    "devdoc",
+                    "userdoc",
+                    "storageLayout",
+                    "evm.legacyAssembly",
+                    "evm.bytecode",
+                    "evm.deployedBytecode",
+                    "evm.methodIdentifiers",
+                    "evm.gasEstimates",
+                    "evm.assembly"
+                ]
+            }
+        },
+        "remappings": []
+    }
+}
